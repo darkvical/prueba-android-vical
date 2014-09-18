@@ -7,6 +7,7 @@ public class Cliente {
 	private String apellidoPaterno;
 	private String apellidoMaterno;
 	private String documento;
+	private String correo;
 	
 	public Cliente(){
 		
@@ -50,6 +51,14 @@ public class Cliente {
 
 	public void setDocumento(String documento) {
 		this.documento = documento;
+	}
+
+	public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
 	}
 	
 }
