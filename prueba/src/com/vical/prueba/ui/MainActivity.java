@@ -2,6 +2,8 @@ package com.vical.prueba.ui;
 
 import com.vical.prueba.R;
 import com.vical.prueba.dao.SQLiteConection;
+import com.vical.prueba.service.impl.ConnectionServiceImpl;
+import com.vical.prueba.util.Constantes;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
@@ -20,12 +22,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 	private EditText txtPassword;
 	private CheckBox chkNuevoRegistro;
 	
+	ConnectionServiceImpl connectionServiceImpl;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SQLiteConection conection=new SQLiteConection(this, "Administrador", null, 1);
+        connectionServiceImpl=new ConnectionServiceImpl();
+//        SQLiteConection conection=new SQLiteConection(this, "Administrador", null, 1);
 //        SQLiteDatabase dbConection=conection.getWritableDatabase();
 //        conection.onCreate(dbConection);
     	txtUsuario=(EditText)findViewById(R.id.txtUsuario);
@@ -54,17 +58,19 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 		case R.id.btnIngresar:
 			if(chkNuevoRegistro.isChecked()){
 				Intent intentRegistro=new Intent(this, RegistroUI.class);
-				startActivity(intentRegistro);
+				startActivity(intentRegistro);								
 			}else{
-				String txtUsuario;
-				txtUsuario=this.txtUsuario.getText().toString();
-		    	Intent intentPrincipal=new Intent(this, PrincipalUI.class);
-		    	intentPrincipal.putExtra("Mensaje", txtUsuario);
-		    	startActivity(intentPrincipal);
-			}	    	
-//	    	Toast.makeText(this, "Entro metodo", Toast.LENGTH_SHORT).show();
-	    	
-			break;
+				Intent intentPrincipal=new Intent(this, PrincipalUI.class);
+				String usuario, password;
+				usuario=txtUsuario.getText().toString();
+				password=txtPassword.getText().toString();			
+				if(connectionServiceImpl.verificarUsuario(this, Constantes.SQLNOMBREDB.TABLA_USUARIO, usuario, password)){
+					startActivity(intentPrincipal);
+				}else{
+					Toast.makeText(this, "Usuario o contraseño incorrecta", Toast.LENGTH_SHORT).show();
+				}
+			}
+	    	break;
 		};
 	}
 }
