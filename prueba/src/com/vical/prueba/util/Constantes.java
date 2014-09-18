@@ -22,10 +22,11 @@ public final class Constantes {
 				"password Text," +
 				"cliente Integer," +
 				"correo Text)";
-		public final static String CAMPOS_CLIENTE	="idCliente,nombre,apellidoPaterno,apellidoMaterno,documento";
-		public final static String CAMPOS_USUARIO	="idUsuario,usuario,password,cliente,correo";
-		public final static String DROP_TABLE		="DROP TABLE IF EXISTS";
-		public final static String SELECT_TABLE		="SELECT *campos FROM *tabla WHERE *condicion=";
+		public final static String 	CAMPOS_CLIENTE	="idCliente,nombre,apellidoPaterno,apellidoMaterno,documento,correo";
+		public final static String 	CAMPOS_USUARIO	="idUsuario,usuario,password,cliente";
+		public final static String 	DROP_TABLE		="DROP TABLE IF EXISTS";
+		public final static String 	SELECT_TABLE	="SELECT *campos FROM *tabla WHERE *condicion";
+		public final static Integer NO_EXISTE		=0; 
 	}
 	public static class SQLNOMBREDB{
 		public final static String NOMBRE_BD		="ADMINISTRACION";
