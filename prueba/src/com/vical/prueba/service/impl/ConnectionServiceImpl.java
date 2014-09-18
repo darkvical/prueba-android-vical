@@ -19,13 +19,14 @@ public class ConnectionServiceImpl implements ConnectionService{
 		SQLiteDatabase bd = admin.getWritableDatabase();
 		ContentValues registroCliente;
 		registroCliente = new ContentValues();
-		registroCliente.put("idCliente", cliente.getIdCliente());
+//		registroCliente.put("idCliente", cliente.getIdCliente());
 		registroCliente.put("nombre", cliente.getNombre());
 		registroCliente.put("apellidoPaterno", cliente.getApellidoPaterno());
 		registroCliente.put("apellidoMaterno", cliente.getApellidoMaterno());
 		registroCliente.put("documento", cliente.getDocumento());
 		registroCliente.put("correo", cliente.getCorreo());
         bd.insert(Constantes.SQLNOMBREDB.TABLA_CLIENTE, null, registroCliente);
+        bd.close();
 	}
 	
 	@Override
@@ -35,7 +36,7 @@ public class ConnectionServiceImpl implements ConnectionService{
 		ContentValues registroUsuario;
 		
 		registroUsuario = new ContentValues();
-		registroUsuario.put("idUsuario", usuario.getIdUsuario());
+//		registroUsuario.put("idUsuario", usuario.getIdUsuario());
         registroUsuario.put("usuario", usuario.getUsuario());
         registroUsuario.put("password", usuario.getPassword());
         registroUsuario.put("cliente", usuario.getCliente());        
@@ -66,15 +67,17 @@ public class ConnectionServiceImpl implements ConnectionService{
 		SQLiteConection admin = new SQLiteConection(context,"", null, 1);
 		SQLiteDatabase bd = admin.getWritableDatabase();
 		String consulta=new String(Constantes.SQLPARAMETROS.SELECT_TABLE);
-		consulta.replaceFirst("*campos", Constantes.SQLPARAMETROS.CAMPOS_CLIENTE);
-		consulta.replaceFirst("*tabla", Constantes.SQLNOMBREDB.TABLA_CLIENTE);
-		consulta.replaceFirst("*condicion", "documento='" + cliente.getDocumento()+"'");
+		consulta.replace("*campos", Constantes.SQLPARAMETROS.CAMPOS_CLIENTE);
+		consulta.replace("*tabla", Constantes.SQLNOMBREDB.TABLA_CLIENTE);
+		consulta.replace("*condicion", "documento='" + cliente.getDocumento()+"'");		
 		Cursor fila=bd.rawQuery(consulta, null);
+		Integer identificador=new Integer(fila.getString(0));
 		if (fila.moveToFirst()){
-			return new Integer(fila.getString(0));
+			bd.close();
+			return identificador; 			
 		}else{
+			bd.close();
 			return Constantes.SQLPARAMETROS.NO_EXISTE;
-		}
-		
+		}		
 	} 
 }
