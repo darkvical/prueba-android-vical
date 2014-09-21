@@ -1,9 +1,9 @@
 package com.vical.prueba.ui;
 
+import com.vical.core.util.Constantes;
 import com.vical.prueba.R;
 import com.vical.prueba.dao.SQLiteConection;
 import com.vical.prueba.service.impl.ConnectionServiceImpl;
-import com.vical.prueba.util.Constantes;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
@@ -29,15 +29,19 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         connectionServiceImpl=new ConnectionServiceImpl();
-//        SQLiteConection conection=new SQLiteConection(this, "Administrador", null, 1);
-//        SQLiteDatabase dbConection=conection.getWritableDatabase();
-//        conection.onCreate(dbConection);
     	txtUsuario=(EditText)findViewById(R.id.txtUsuario);
     	txtPassword=(EditText)findViewById(R.id.txtPassword);
     	chkNuevoRegistro=(CheckBox)findViewById(R.id.chkNuevoUsuario);
+    	limpiar();
     }
     
-    @Override
+    private void limpiar(){
+    	txtUsuario.setText("");
+    	txtPassword.setText("");
+    	chkNuevoRegistro.setChecked(false);
+	}
+
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -54,7 +58,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
 	@Override
 	public void onClick(View view) {
-		switch (view.getId()) {		
+		switch (view.getId()) {
 		case R.id.btnIngresar:
 			if(chkNuevoRegistro.isChecked()){
 				Intent intentRegistro=new Intent(this, RegistroUI.class);
@@ -65,12 +69,13 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 				usuario=txtUsuario.getText().toString();
 				password=txtPassword.getText().toString();			
 				if(connectionServiceImpl.verificarUsuario(this, Constantes.SQLNOMBREDB.TABLA_USUARIO, usuario, password)){
+					intentPrincipal.putExtra("mensaje", "Ingreso correcto");
 					startActivity(intentPrincipal);
 				}else{
 					Toast.makeText(this, "Usuario o contraseño incorrecta", Toast.LENGTH_SHORT).show();
 				}
 			}
 	    	break;
-		};
+		}
 	}
 }
