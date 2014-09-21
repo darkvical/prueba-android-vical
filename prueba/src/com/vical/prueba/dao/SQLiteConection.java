@@ -1,6 +1,6 @@
 package com.vical.prueba.dao;
 
-import com.vical.prueba.util.Constantes;
+import com.vical.core.util.Constantes;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

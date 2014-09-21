@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.vical.core.util.Constantes;
 import com.vical.prueba.dao.SQLiteConection;
-import com.vical.prueba.util.Constantes;
 
 public class SQLTransaction {
 	public void insertarUsuario(Context context,ContentValues contentValues,String nombreTabla){

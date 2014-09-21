@@ -14,7 +14,8 @@ public class PrincipalUI extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.principalui);
 		txtMensaje=(TextView)findViewById(R.id.txtMensaje);
-		Bundle bundleRecepcion=getIntent().getExtras();
-		txtMensaje.setText(String.valueOf(bundleRecepcion.getString("Mensaje")));
+		
+		Bundle bundleRecepcion=getIntent().getExtras();//FIXME Permite recepcionar el parametro enviado
+		txtMensaje.setText(String.valueOf(bundleRecepcion.getString("mensaje")));
 	}	
 }

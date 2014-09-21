@@ -5,13 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.vical.core.impl.BaseUI;
+import com.vical.core.util.Constantes;
 import com.vical.prueba.dao.SQLiteConection;
 import com.vical.prueba.domain.Cliente;
 import com.vical.prueba.domain.Usuario;
 import com.vical.prueba.service.ConnectionService;
-import com.vical.prueba.util.Constantes;
 
-public class ConnectionServiceImpl implements ConnectionService{
+public class ConnectionServiceImpl extends BaseUI implements ConnectionService{
 
 	@Override
 	public void crearCliente(Context context,Cliente cliente) {
@@ -24,7 +25,7 @@ public class ConnectionServiceImpl implements ConnectionService{
 		registroCliente.put("apellidoPaterno", cliente.getApellidoPaterno());
 		registroCliente.put("apellidoMaterno", cliente.getApellidoMaterno());
 		registroCliente.put("documento", cliente.getDocumento());
-		registroCliente.put("correo", cliente.getCorreo());
+//		registroCliente.put("correo", cliente.getCorreo());
         bd.insert(Constantes.SQLNOMBREDB.TABLA_CLIENTE, null, registroCliente);
         bd.close();
 	}
@@ -36,7 +37,6 @@ public class ConnectionServiceImpl implements ConnectionService{
 		ContentValues registroUsuario;
 		
 		registroUsuario = new ContentValues();
-//		registroUsuario.put("idUsuario", usuario.getIdUsuario());
         registroUsuario.put("usuario", usuario.getUsuario());
         registroUsuario.put("password", usuario.getPassword());
         registroUsuario.put("cliente", usuario.getCliente());        
@@ -47,13 +47,10 @@ public class ConnectionServiceImpl implements ConnectionService{
 	@Override
 	public boolean verificarUsuario(Context context,String tablaNombre,String usuario, String password) {
 		boolean existe;
-		SQLiteConection admin = new SQLiteConection(context,"", null, 1);
+		SQLiteConection admin = new SQLiteConection(context,Constantes.SQLNOMBREDB.NOMBRE_BD, null, 1);
 		SQLiteDatabase bd = admin.getWritableDatabase();
-		String consulta=new String(Constantes.SQLPARAMETROS.SELECT_TABLE);
-		consulta.replaceFirst("*campos", Constantes.SQLPARAMETROS.CAMPOS_USUARIO);
-		consulta.replaceFirst("*tabla", tablaNombre);
-		consulta.replaceFirst("*condicion", "usuario='" + usuario+"' and password='"+password+"'");
-        Cursor fila = bd.rawQuery(consulta, null);
+		String consulta=getConsulta(Constantes.SQLPARAMETROS.CAMPOS_USUARIO, Constantes.SQLNOMBREDB.TABLA_USUARIO, "usuario='" + usuario+"' and password='"+password+"'");
+		Cursor fila = bd.rawQuery(consulta, null);
         if (fila.getCount()>0) {
         	existe=true;
         }else{
@@ -64,15 +61,12 @@ public class ConnectionServiceImpl implements ConnectionService{
 	}
 	
 	public Integer identificadorCliente(Context context,Cliente cliente){
-		SQLiteConection admin = new SQLiteConection(context,"", null, 1);
+		SQLiteConection admin = new SQLiteConection(context,Constantes.SQLNOMBREDB.NOMBRE_BD, null, 1);
 		SQLiteDatabase bd = admin.getWritableDatabase();
-		String consulta=new String(Constantes.SQLPARAMETROS.SELECT_TABLE);
-		consulta.replace("*campos", Constantes.SQLPARAMETROS.CAMPOS_CLIENTE);
-		consulta.replace("*tabla", Constantes.SQLNOMBREDB.TABLA_CLIENTE);
-		consulta.replace("*condicion", "documento='" + cliente.getDocumento()+"'");		
-		Cursor fila=bd.rawQuery(consulta, null);
-		Integer identificador=new Integer(fila.getString(0));
+		String consulta=getConsulta(Constantes.SQLPARAMETROS.CAMPOS_CLIENTE, Constantes.SQLNOMBREDB.TABLA_CLIENTE, "documento='" + cliente.getDocumento()+"'");
+		Cursor fila=bd.rawQuery(consulta, null);				
 		if (fila.moveToFirst()){
+			Integer identificador=new Integer(fila.getInt(0));
 			bd.close();
 			return identificador; 			
 		}else{
